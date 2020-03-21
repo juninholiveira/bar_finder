@@ -295,21 +295,21 @@ function initMap()
     let center = new google.maps.LatLng(userCoords.lat, userCoords.lng)
 
     //Aqui eu defino os detalhes do que eu vou procurar
-    let request = {location: center, radius: 10000, types: ['bar', 'restaurant', 'fast-food']}
+    let request = {location: center, radius: 10000, types: ['bar', 'restaurant']}
 
+    //Cria a variável que vai guardar os dados da InfoWindow de cada marcador
     infoWindow = new google.maps.InfoWindow()
 
     //Crio um serviço de Places e faço a busca, chamando o método callback
     let service = new google.maps.places.PlacesService(map)
-    service.nearbySearch(request, callback)
+    service.nearbySearch(request, nearbyCallback)
 
-    function callback(results, status)
+    function nearbyCallback(results, status)
     {
         if(status == google.maps.places.PlacesServiceStatus.OK)
         {
             for (let i = 0; i < results.length; i++)
             {
-                console.log("achou " + [i])
                 addMarker(results[i])
             }
         }
@@ -318,35 +318,36 @@ function initMap()
     //Método que adiciona um marcador no mapa para o lugar recebido como parametro
     function addMarker(place)
     {
-        let placeLoc = place.geometry.location
+        //Adiciona o marcador
         let marker = new google.maps.Marker({map: map, position: place.geometry.location})
 
-        google.maps.event.addListener(marker, 'click', function() {
-            infoWindow.setContent(place.name)
-            infoWindow.open(map, this)
-        })
-        // //Cria o marcador na posição recebida
-        // let marker = new google.maps.Marker({position: place.coords, map:map})
+        let placeRequest = {placeId: place.id, fields: ['name', 'formatted_address', 'place_id', 'geometry']}
+        service.getDetails(placeRequest, callback2)
+        function callback2 (detailedPlace, status)
+        {
+            if (status == google.maps.places.PlacesServiceStatus.OK) 
+            {
+                console.log(detailedPlace);
+            }
+        }
 
-        // //Checa se tem um marcador customizado
-        // if (place.iconImage)
-        // {
-        //     //Seta o marcador
-        //     marker.setIcon(place.iconImage);
-        // }
+        //Adiciona um Listener de click no marcador e define o conteúdo do infoWindow
+        google.maps.event.addListener
+        (
+            marker,
+            'click',
+            function() 
+            {
+                infoWindow.setContent
+                (
+                    //place.name
+                    `<h1>${place.name}</h1>
+                    <br><p>${detailedPlace.formatted_address}</p>
+                    `
+                )
+                infoWindow.open(map, this)
+            }
+        )
 
-        // //Checa se tem um conteúdo de infoWindow
-        // if (place.content)
-        // {
-        //     let infoWindow = new google.maps.InfoWindow({content: place.content})
-        //     marker.addListener
-        //     (
-        //         'click',
-        //         function ()
-        //         {
-        //             infoWindow.open(map, marker)
-        //         }
-        //     )
-        // }       
     }
 }
