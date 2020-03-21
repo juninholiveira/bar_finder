@@ -297,7 +297,8 @@ function initMap()
     //Aqui eu defino os detalhes do que eu vou procurar
     let request = {location: center, radius: 10000, types: ['bar', 'restaurant']}
 
-    //Cria a variável que vai guardar os dados da InfoWindow de cada marcador
+    //Cria a variável que vai guardar os dados da InfoWindow de cada marcador.
+    //Ela é criada aqui fora da função de criar o marcador, para evitar de uma ficar aberta ao clicar em outra
     infoWindow = new google.maps.InfoWindow()
 
     //Crio um serviço de Places e faço a busca, chamando o método callback
@@ -308,46 +309,66 @@ function initMap()
     {
         if(status == google.maps.places.PlacesServiceStatus.OK)
         {
-            for (let i = 0; i < results.length; i++)
-            {
-                addMarker(results[i])
-            }
+                addMarkers(results)
         }
     }
 
-    //Método que adiciona um marcador no mapa para o lugar recebido como parametro
-    function addMarker(place)
+    //Método que adiciona um marcador no mapa em cada lugar recebido como parâmetro
+    function addMarkers(places)
     {
-        //Adiciona o marcador
-        let marker = new google.maps.Marker({map: map, position: place.geometry.location})
-
-        let placeRequest = {placeId: place.id, fields: ['name', 'formatted_address', 'place_id', 'geometry']}
-        service.getDetails(placeRequest, callback2)
-        function callback2 (detailedPlace, status)
-        {
-            if (status == google.maps.places.PlacesServiceStatus.OK) 
-            {
-                console.log(detailedPlace);
-            }
-        }
-
-        //Adiciona um Listener de click no marcador e define o conteúdo do infoWindow
-        google.maps.event.addListener
+        places.forEach
         (
-            marker,
-            'click',
-            function() 
+            place => 
             {
-                infoWindow.setContent
+                let marker = new google.maps.Marker({position: place.geometry.location, map: map, title: place.name})
+
+                // Add click listener to each marker
+                google.maps.event.addListener
                 (
-                    //place.name
-                    `<h1>${place.name}</h1>
-                    <br><p>${detailedPlace.formatted_address}</p>
-                    `
+                    marker,
+                    'click', () => 
+                    {
+                        let request = {placeId: place.place_id, fields: ['name', 'formatted_address', 'geometry', 'rating', 'website']}
+        
+                        /* Only fetch the details of a place when the user clicks on a marker.
+                        * If we fetch the details for all place results as soon as we get
+                        * the search response, we will hit API rate limits. */
+                        service.getDetails
+                        (
+                            request,
+                            (placeResult, status) => 
+                            {
+                                showDetails(placeResult, marker, status)
+                            }
+                        )
+                    }
                 )
-                infoWindow.open(map, this)
             }
         )
+    }
 
+    // Builds an InfoWindow to display details above the marker
+    function showDetails(placeResult, marker, status)
+    {
+        if (status == google.maps.places.PlacesServiceStatus.OK) 
+        {
+            //let rating = "None";
+            if(placeResult.rating == undefined)
+            {
+                placeResult.rating = "Desconhecida"
+            }
+            if (placeResult.rating) rating = placeResult.rating;
+            infoWindow.setContent
+            (
+                `<h1>${placeResult.name}</h1>
+                <br><p>${placeResult.formatted_address}</p>
+                <br><h2>Avaliação: ${placeResult.rating}</h2>`
+            );
+            infoWindow.open(marker.map, marker);
+        }
+        else
+        {
+            console.log('showDetails failed: ' + status);
+        }
     }
 }
