@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Primeiro passo: Pegar as coordenadas do usuário
 
-console.log("1.0")
+console.log("1.01")
 
 //Inicializa globalmente a variável que vai armazenar o objeto com as coordenadas do usuário
 let userCoords
@@ -29,6 +29,14 @@ function getLocation()
 
 //Chama a função que busca a localização atual
 getLocation()
+
+while(!userCoords)
+{
+    if(userCoords)
+    {
+        break
+    }
+}
 
 //Função que trata dos erros caso o 'getCurrentPosition' retorne um erro
 function showError(error) 
