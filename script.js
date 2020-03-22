@@ -7,7 +7,6 @@ let userCoords
 //Chama a função que busca a localização atual
 getLocation()
 
-
 function getLocation()
 {
     //Verifica se a geolocalização é suportada
@@ -293,9 +292,14 @@ function initMap()
 
     //Salvo nessa variável um objeto com a posição do usuário, para ficar mais fácil passar para o resquest em seguida
     let center = new google.maps.LatLng(userCoords.lat, userCoords.lng)
+    let radius = 8000
 
     //Aqui eu defino os detalhes do que eu vou procurar
-    let request = {location: center, radius: 10000, types: ['bar', 'restaurant']}
+    let request = {location: center, radius: radius, types: ['bar', 'restaurant']}
+    let request2 = {location: center, radius: radius, query: 'restaurant'}
+    let request3 = {location: center, radius: radius, query: 'bar'}
+    let request4 = {location: center, radius: radius, query: 'lanchonete'}
+    let request5 = {location: center, radius: radius, query: 'fast-food'}
 
     //Cria a variável que vai guardar os dados da InfoWindow de cada marcador.
     //Ela é criada aqui fora da função de criar o marcador, para evitar de uma ficar aberta ao clicar em outra
@@ -303,9 +307,14 @@ function initMap()
 
     //Crio um serviço de Places e faço a busca, chamando o método callback
     let service = new google.maps.places.PlacesService(map)
-    service.nearbySearch(request, nearbyCallback)
+    service.nearbySearch(request, callback)
+    service.textSearch(request2, callback)
+    service.textSearch(request3, callback)
+    service.textSearch(request4, callback)
+    service.textSearch(request5, callback)
 
-    function nearbyCallback(results, status)
+    //Função chamada para adicionar um marcador com os resultados recebidos
+    function callback(results, status)
     {
         if(status == google.maps.places.PlacesServiceStatus.OK)
         {
