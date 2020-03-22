@@ -1,6 +1,8 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Primeiro passo: Pegar as coordenadas do usuário
 
+console.log("1.0")
+
 //Inicializa globalmente a variável que vai armazenar o objeto com as coordenadas do usuário
 let userCoords
 
