@@ -296,10 +296,13 @@ function initMap()
 
     //Aqui eu defino os detalhes do que eu vou procurar
     let request = {location: center, radius: radius, types: ['bar', 'restaurant']}
-    let request2 = {location: center, radius: radius, query: 'restaurant'}
+    let request2 = {location: center, radius: radius, query: 'restaurante'}
     let request3 = {location: center, radius: radius, query: 'bar'}
     let request4 = {location: center, radius: radius, query: 'lanchonete'}
     let request5 = {location: center, radius: radius, query: 'fast-food'}
+    let request6 = {location: center, radius: radius, query: 'churrasco'}
+    let request7 = {location: center, radius: radius, query: 'hamburguer'}
+    let request8 = {location: center, radius: radius, query: 'pizza'}
 
     //Cria a variável que vai guardar os dados da InfoWindow de cada marcador.
     //Ela é criada aqui fora da função de criar o marcador, para evitar de uma ficar aberta ao clicar em outra
@@ -312,6 +315,9 @@ function initMap()
     service.textSearch(request3, callback)
     service.textSearch(request4, callback)
     service.textSearch(request5, callback)
+    service.textSearch(request6, callback)
+    service.textSearch(request7, callback)
+    service.textSearch(request8, callback)
 
     //Função chamada para adicionar um marcador com os resultados recebidos
     function callback(results, status)
