@@ -4,8 +4,11 @@
 //Inicializa globalmente a variável que vai armazenar o objeto com as coordenadas do usuário
 let userCoords
 
-//Chama a função que busca a localização atual
-getLocation()
+//Essa é a função chamada pelo 'getCurrentPosition' em caso de sucesso
+function showPosition(position)
+{
+    userCoords = {lat: position.coords.latitude, lng: position.coords.longitude}
+}
 
 function getLocation()
 {
@@ -22,11 +25,8 @@ function getLocation()
     }
 }
 
-//Essa é a função chamada pelo 'getCurrentPosition' em caso de sucesso
-function showPosition(position)
-{
-    userCoords = {lat: position.coords.latitude, lng: position.coords.longitude}
-}
+//Chama a função que busca a localização atual
+getLocation()
 
 //Função que trata dos erros caso o 'getCurrentPosition' retorne um erro
 function showError(error) 

@@ -239,6 +239,15 @@ function initMap()
     //Cria o mapa e passa as opções
     map = new google.maps.Map(document.getElementById('map'), options)
 
+
+    while(!userCoords)
+    {
+        if(userCoords)
+        {
+            break
+        }
+    }
+
     //Salvo nessa variável um objeto com a posição do usuário, para ficar mais fácil passar para o resquest em seguida
     let center = new google.maps.LatLng(userCoords.lat, userCoords.lng)
     let radius = 8000
