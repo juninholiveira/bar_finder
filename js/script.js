@@ -7,57 +7,26 @@ console.log("1.01")
 let userCoords = {}
 
 //Essa é a função chamada pelo 'getCurrentPosition' em caso de sucesso
-// function showPosition(position)
-// {
-//   userCoords = {}
-//   userCoords = {lat: position.coords.latitude, lng: position.coords.longitude}
-// }
-
-// function getLocation()
-// {
-//     //Verifica se a geolocalização é suportada
-//     if(navigator.geolocation)
-//     {
-//         //Se der certo, executa o método 'getCurrentPosition', que chama a função 'showPosition'
-//         navigator.geolocation.getCurrentPosition(showPosition, showError)
-//     }
-//     else
-//     {
-//         //Senão, exibi uma mensagem de erro
-//         alert("Geolocalização não suportada.")
-//     }
-// }
-
-// //Chama a função que busca a localização atual
-// getLocation()
-function getLocation(callback)
+function showPosition(position)
 {
-  if (navigator.geolocation) 
-  {
-    var lat_lng = navigator.geolocation.getCurrentPosition
-    (
-      function(position)
-      {
-        userCoords.lat = position.coords.latitude; 
-        userCoords.lng = position.coords.longitude; 
-        callback(userCoords);
-      },
-      showError
-    )
-  } 
-  else 
-  {
-    alert("Geolocation is not supported by this browser.");
-  }
+  userCoords = {}
+  userCoords = {lat: position.coords.latitude, lng: position.coords.longitude}
 }
 
-getLocation
-(
-  function(lat_lng)
-  {
-    console.log(lat_lng);
-  }
-)
+function getLocation()
+{
+    //Verifica se a geolocalização é suportada
+    if(navigator.geolocation)
+    {
+        //Se der certo, executa o método 'getCurrentPosition', que chama a função 'showPosition'
+        navigator.geolocation.getCurrentPosition(showPosition, showError)
+    }
+    else
+    {
+        //Senão, exibi uma mensagem de erro
+        alert("Geolocalização não suportada.")
+    }
+}
 
 //Função que trata dos erros caso o 'getCurrentPosition' retorne um erro
 function showError(error) 
@@ -79,7 +48,7 @@ function showError(error)
     }
 }
 
-
+getLocation()
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Função que inicializa o mapa
